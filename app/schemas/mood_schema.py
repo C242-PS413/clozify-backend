@@ -1,36 +1,40 @@
-from pydantic import BaseModel, Field, ValidationError, model_validator
-from typing import Any
-from typing import Self
+from pydantic import BaseModel, Field, UUID4
 from datetime import datetime, timezone
-from uuid import UUID
+from enum import Enum
+
+class MoodEnum(str, Enum):
+    JOY = "joy"
+    CONTENTMENT = "contentment"
+    NEUTRAL = "neutral"
+    SADNESS = "sadness"
+    ANGER = "anger"
+
+
+class WeatherEnum(str, Enum):
+    SUMMER = "summer"
+    RAINY = "rainy"
+
+
+class GenderEnum(str, Enum):
+    MALE = "male"
+    FEMALE = "female"
 
 
 class MoodInput(BaseModel):
-    user_id: UUID
-    mood: int
+    user_id: UUID4
+    mood: MoodEnum
+    weather: WeatherEnum
+    gender: GenderEnum
 
-    @model_validator(mode='before')
-    @classmethod
-    def validate_user_id(cls, data: Any) -> Any:
-        if "user_id" in data:
-            try:
-                UUID(data["user_id"])
-            except ValueError:
-                raise ValueError("Invalid UUID format for user_id.")
-        else:
-            raise ValueError("user_id is required.")
-        return data
-
-    @model_validator(mode='after')
-    def check_passwords_match(self) -> Self:
-        if not self.user_id:
-            raise ValueError("user_id must not be empty.")
-        if not (1 <= self.mood < 6):
-            raise ValueError("Mood must be between 1 and 6.")
-        return self
-
-
+    
 class MoodOutput(BaseModel):
-    user_id: str
-    mood: int
+    user_id: UUID4
+    mood: str
+    weather: str
+    gender: str
+    file_url: str = None
     timestamp: int = Field(default_factory=lambda: int(datetime.now(timezone.utc).timestamp()))
+    
+
+class DeleteMoodResponse(BaseModel):
+    message: str
