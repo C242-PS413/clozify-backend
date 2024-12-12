@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List, Dict
+from typing import List
 
 class RecommendationItem(BaseModel):
     image: str
@@ -28,3 +28,19 @@ class MoodDataInput(BaseModel):
     gender: str
     weather: List[str]
     file_url: str
+
+class RecommendationItem(BaseModel):
+    image: str
+    name: str
+
+class Recommendation(BaseModel):
+    recommendations_item: RecommendationItem
+    more_recommended_items: List[RecommendationItem]
+
+class OutfitCategory(BaseModel):
+    recommendations: List[Recommendation]
+
+class OutfitRecommendation(BaseModel):
+    TopWear: OutfitCategory
+    Bottomwear: OutfitCategory
+    Footwear: OutfitCategory

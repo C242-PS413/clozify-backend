@@ -10,10 +10,12 @@ from google.cloud.storage import Client as StorageClient
 from datetime import datetime
 from urllib.parse import urlparse
 import httpx
-from dotenv import load_dotenv
 import os
 import httpx
 import requests
+from dotenv import load_dotenv
+
+
 load_dotenv()
 
 
@@ -204,7 +206,7 @@ class MoodService:
 
     async def analyze_mood_with_ml(self, user_id: str, file_url: str, db: firestore.Client) -> str:
 
-        ml_endpoint = os.getenv("ML_ENDPOINT")  # Endpoint ML
+        ml_endpoint = os.getenv("ML_MOOD_ENDPOINT")  # Endpoint ML
 
         try:
             #download file URl

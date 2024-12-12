@@ -57,6 +57,10 @@ async def update_mood(
     file: UploadFile = File(...),
     db: StorageClient = Depends(get_db) 
 ):
+    
+    if gender not in ["Men", "Women"]:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid gender value.")
+    
     try:
         mood_service = MoodService(db=db)
         updated_mood = await mood_service.update_mood(user_id, gender, file)

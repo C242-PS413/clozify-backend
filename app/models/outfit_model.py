@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List
 from dataclasses import dataclass
 
 @dataclass
@@ -16,3 +16,14 @@ class MoodData:
             w 
             for w in self.weather
         ]
+
+from google.cloud import firestore
+
+class OutfitModel:
+    def __init__(self):
+        self.db = firestore.Client()
+        self.collection_name = "outfit"
+
+    def save_recommendations(self, user_id: str, recommendations: dict):
+        document_ref = self.db.collection(self.collection_name).document(user_id)
+        document_ref.set(recommendations)
