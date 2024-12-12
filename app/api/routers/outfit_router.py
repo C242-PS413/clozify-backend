@@ -1,21 +1,18 @@
 from fastapi import APIRouter, Depends, HTTPException
-from ...services.outfit_service import OutfitService, OutfitModel
-from ...schemas.outfit_schema import OutfitRecommendationResponse
-from google.cloud.firestore import Client
+from google.cloud.firestore_v1 import Client as FirestoreClient
+from typing import List
+from pydantic import BaseModel
 from ...core.firebase_config import get_db
+from ...services.outfit_service import OutfitService
 
 router = APIRouter(
-    prefix="/outfit",
-    tags=["outfit"]
+    prefix="/recommendations",
+    tags=["recommendations"]
 )
 
-@router.get("/recommendations", response_model=OutfitRecommendationResponse)
-async def get_outfit_recommendation(user_id: str, db: Client = Depends(get_db)):
-    try:
-        return OutfitService.get_outfit(user_id, db)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error generating recommendations: {str(e)}")
-
-
-
-
+@router.post("/migrate/{user_id}")
+async def migrate_mood_data_to_recommendations(
+    user_id: str,
+    db: FirestoreClient = Depends(get_db)
+):
+    return await OutfitService.migrate_mood_data_to_recommendations(user_id, db)

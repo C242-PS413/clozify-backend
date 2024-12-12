@@ -36,5 +36,5 @@ async def get_weather(city: str, db: Client = Depends(get_db)):
 
         return {"city": city, **weather_dict, "cached": False}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
     

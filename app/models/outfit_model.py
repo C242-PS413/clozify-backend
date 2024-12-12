@@ -1,11 +1,18 @@
-from pydantic import BaseModel
-from pydantic import UUID4
+from typing import List, Optional
+from dataclasses import dataclass
 
-
-class OutfitModel(BaseModel):
-    id: UUID4
-    outfit: str
-    mood: str
-    weather: str
+@dataclass
+class MoodData:
+    user_id: str
+    predicted_mood: str
     gender: str
+    weather: List[str]
+    file_url: str
 
+    def transform_weather(self) -> List[str]:
+        return [
+            'Rainy' if w == 'rain' else 
+            'Sunny' if w == 'summer' else 
+            w 
+            for w in self.weather
+        ]

@@ -1,40 +1,31 @@
-from pydantic import BaseModel, Field, UUID4
-from datetime import datetime, timezone
+from pydantic import BaseModel, UUID4
 from enum import Enum
+from typing import List
 
-class MoodEnum(str, Enum):
-    JOY = "joy"
-    CONTENTMENT = "contentment"
-    NEUTRAL = "neutral"
-    SADNESS = "sadness"
-    ANGER = "anger"
-
+class ImageMoodEnum(str, Enum):
+    IMAGE = "image"
 
 class WeatherEnum(str, Enum):
-    SUMMER = "summer"
-    RAINY = "rainy"
+    SUMMER = "Sunny"
+    RAINY = "Rainy"
 
 
 class GenderEnum(str, Enum):
-    MALE = "male"
-    FEMALE = "female"
+    MALE = "Men"
+    FEMALE = "Women"
 
 
 class MoodInput(BaseModel):
     user_id: UUID4
-    mood: MoodEnum
-    weather: WeatherEnum
+    picture_mood: ImageMoodEnum
     gender: GenderEnum
 
     
 class MoodOutput(BaseModel):
     user_id: UUID4
-    mood: str
-    weather: str
     gender: str
-    file_url: str = None
-    timestamp: int = Field(default_factory=lambda: int(datetime.now(timezone.utc).timestamp()))
-    
-
-class DeleteMoodResponse(BaseModel):
-    message: str
+    weather: List[str]
+    file_url: str
+    city: str
+    predicted_mood: str
+    timestamp: str

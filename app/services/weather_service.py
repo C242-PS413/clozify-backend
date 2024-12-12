@@ -45,9 +45,18 @@ async def get_weather_from_api(city: str) -> dict:
         raise Exception("No weather data found for the city.")
 
 def save_weather_to_firestore(weather: dict, db: Client = Depends(get_db)):
-    weather_ref = db.collection("weather").document(weather["city"])
-    weather_ref.set(weather)
-
+    # Gunakan resolvedAddress sebagai document ID untuk konsistensi
+    weather_ref = db.collection("weather").document(weather["resolvedAddress"])
+    
+    # Pastikan menyimpan seluruh data dengan benar
+    weather_data = {
+        "city": weather["resolvedAddress"],
+        "temp": weather["temp"],
+        "preciptype": weather["preciptype"],
+        "resolvedAddress": weather["resolvedAddress"]
+    }
+    
+    weather_ref.set(weather_data)
 
 def get_weather_from_firestore(city: str, db: Client):
     """Retrieve weather data from Firestore."""
