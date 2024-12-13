@@ -13,7 +13,6 @@
    python -m venv venv
    ./venv/Scripts/activate
    pip install -r /path/to/requirements.txt
-   uvicorn app.main:app --reload
    ```
 
 ### Configuration
